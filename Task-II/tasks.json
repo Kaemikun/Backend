@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "title": "wash dishes",
+    "description": "pls wash dishes on time"
+  },
+  {
+    "id": 2,
+    "title": "do laundary",
+    "description": "it should be done before 9 am tomr"
+  },
+  {
+    "id": 3,
+    "title": "Go to supermarket",
+    "description": "just for testing purposes"
+  },
+  {
+    "id": 4,
+    "title": "For testing purpose",
+    "description": "Final testing phase its working !! ig :)"
+  }
+]

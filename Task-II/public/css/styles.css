@@ -1,0 +1,391 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #121212, #1e1e2f);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 92%;
+    max-width: 500px;
+    background: rgba(24, 24, 36, 0.9);
+    backdrop-filter: blur(16px);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 14px 45px rgba(0, 0, 0, 0.5);
+    transition: 0.3s ease-in-out;
+}
+
+.container:hover {
+    box-shadow: 0 14px 55px rgba(0, 0, 0, 0.65);
+}
+
+
+h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 22px;
+    color: black;
+    text-align: center;
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 18px;
+}
+
+
+.task-list li {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 18px 20px;
+    margin: 14px 0;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-left: 5px solid #ff4757;
+}
+
+
+.task-list li:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: scale(1.02);
+}
+
+
+.task-checkbox {
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    appearance: none;
+    border: 2px solid #ff4757;
+    border-radius: 8px;
+    transition: 0.3s ease;
+    background: transparent;
+    position: relative;
+}
+
+.task-checkbox:checked {
+    background: #ff4757;
+    border-color: #ff4757;
+}
+
+.task-checkbox:checked::after {
+    content: '✔';
+    color: white;
+    font-size: 15px;
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+.task-content {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    flex-grow: 1;
+    padding-left: 14px;
+}
+
+
+.task-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 3px;
+}
+
+
+.task-description {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.5;
+}
+
+
+.btn {
+    padding: 14px 24px;
+    background: linear-gradient(45deg, #ff4757, #ff6b6b);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    display: inline-block;
+    margin-top: 18px;
+}
+
+.btn:hover {
+    background: linear-gradient(45deg, #ff6b6b, #ff4757);
+    transform: scale(1.08);
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+
+input, textarea {
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    width: 100%;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.18);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+
+input::placeholder, textarea::placeholder {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+
+input:focus, textarea:focus {
+    background: rgba(255, 255, 255, 0.25);
+    outline: none;
+}
+
+
+button {
+    width: 100%;
+    background: linear-gradient(45deg, #4caf50, #2e8b57);
+    color: white;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+button:hover {
+    background: linear-gradient(45deg, #2e8b57, #4caf50);
+    transform: scale(1.05);
+}
+
+
+@media (max-width: 600px) {
+    .container {
+        width: 96%;
+    }
+
+    .task-list li {
+        padding: 16px;
+    }
+
+    input, textarea {
+        padding: 14px;
+    }
+}
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+
+:root {
+    --bg-color: #f8f8f8;
+    --container-bg: white;
+    --text-color: #333;
+    --task-bg: #f0f0f0;
+    --task-hover: #e0e0e0;
+    --checkbox-border: #007bff;
+    --btn-bg: linear-gradient(45deg, #007bff, #00bfff);
+    --btn-hover: linear-gradient(45deg, #00bfff, #007bff);
+}
+
+
+body.dark-mode {
+    --bg-color: #121212;
+    --container-bg: rgba(24, 24, 36, 0.9);
+    --text-color: #fff;
+    --task-bg: rgba(255, 255, 255, 0.08);
+    --task-hover: rgba(255, 255, 255, 0.12);
+    --checkbox-border: #ff4757;
+    --btn-bg: linear-gradient(45deg, #ff4757, #ff6b6b);
+    --btn-hover: linear-gradient(45deg, #ff6b6b, #ff4757);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+
+.container {
+    width: 92%;
+    max-width: 500px;
+    background: var(--container-bg);
+    backdrop-filter: blur(16px);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 14px 45px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s;
+}
+
+.container:hover {
+    box-shadow: 0 14px 55px rgba(0, 0, 0, 0.65);
+}
+
+
+.task-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 18px;
+}
+
+.task-list li {
+    display: flex;
+    align-items: center;
+    background: var(--task-bg);
+    padding: 18px 20px;
+    margin: 14px 0;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-left: 5px solid var(--checkbox-border);
+}
+
+.task-list li:hover {
+    background: var(--task-hover);
+    transform: scale(1.02);
+}
+
+
+.task-checkbox {
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    appearance: none;
+    border: 2px solid var(--checkbox-border);
+    border-radius: 8px;
+    background: transparent;
+    position: relative;
+    transition: 0.3s;
+}
+
+.task-checkbox:checked {
+    background: var(--checkbox-border);
+    border-color: var(--checkbox-border);
+}
+
+.task-checkbox:checked::after {
+    content: '✔';
+    color: white;
+    font-size: 15px;
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+.task-content {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    flex-grow: 1;
+    padding-left: 14px;
+}
+
+
+.task-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 3px;
+}
+
+
+.task-description {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(0, 0, 0, 0.7);
+    transition: color 0.3s;
+}
+
+body.dark-mode .task-description {
+    color: rgba(255, 255, 255, 0.75);
+}
+body.dark-mode h1{
+    color: rgba(255, 255, 255, 0.75);
+}
+
+
+.btn {
+    padding: 14px 24px;
+    background: var(--btn-bg);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    display: inline-block;
+    margin-top: 18px;
+}
+
+.btn:hover {
+    background: var(--btn-hover);
+    transform: scale(1.08);
+}
+
+
+#theme-toggle {
+    padding: 10px 16px;
+    background: var(--btn-bg);
+    color: white;
+    
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+#theme-toggle:hover {
+    background: var(--btn-hover);
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: black;
+    color: #333;
+    
+}
+
