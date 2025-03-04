@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Students</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .student-container {
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .student-card {
+            background-color: #111; 
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border: 1px solid #333; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+        }
+
+        .student-card strong {
+            display: block;
+            font-weight: bold;
+        }
+
+        .student-card span {
+            color: #aaa;
+        }
+
+        @media (max-width: 600px){
+    section span{
+        width: calc(20vw - 2px);
+        height: calc(20vw 2px);
+    }
+}
+        
+        nav {
+    background-color: transparent; 
+    color: white;
+    padding: 20px 20px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    backdrop-filter: blur(8px); 
+}
+
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+
+.menu-icon {
+    display: none; 
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 20px;
+    justify-content: center;
+    flex-grow: 1;
+
+}
+
+
+.nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+
+.nav-links li a:hover {
+    
+    color: #00d4ff; 
+    text-shadow: 0 0 10px #00d4ff,
+                 0 0 20px #00d4ff, 
+                 0 0 30px #00d4ff; 
+}
+
+
+
+@media (max-width: 768px) {
+  
+    .menu-icon {
+        display: block;
+    }
+
+    
+    .nav-links {
+        display: none;
+        z-index: 5000;
+        position: absolute;
+        top: 60px; 
+        left: 0;
+        width: 100%;
+        background-color: black;
+        flex-direction: column;
+        padding: 10px 0;
+       
+        backdrop-filter: blur(8px);
+    }
+
+    
+    .nav-links.active {
+        display: flex;
+        z-index: 5000;
+    }
+
+   
+    .nav-links li {
+        z-index: 6000;
+        text-align: center;
+        padding: 10px 0;
+    }
+}
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <div class="menu-icon" onclick="toggleMenu()">
+                &#9776; 
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">JSON</a></li>
+                <li><a href="/allstudent">All Students</a></li>
+                <li><a href="/register">Register</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <h1 style="margin-top: 100px;">All Student Data</h1>
+    <div class="student-container" id="studentContainer">
+       
+    </div>
+
+    <script>
+       
+        document.getElementsByTagName("h1")[0].innerHTML = "Student List";
+
+       
+        fetch("http://localhost:3000")
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+
+                
+                const container = document.getElementById('studentContainer');
+
+               
+                data.forEach(person => {
+                    const studentCard = document.createElement('div');
+                    studentCard.classList.add('student-card');
+                    studentCard.innerHTML = `
+                        <strong>Name:</strong> ${person.name} <br>
+                        <strong>Email:</strong> <span>${person.email}</span><br>
+                        <strong>Gender:</strong> <span>${person.gender}</span><br>
+                        <strong>Subjects:</strong> <span>${person.subjects}</span><br>
+                        <strong>Stream:</strong> <span>${person.stream}</span>
+                    `;
+                    container.appendChild(studentCard);
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+            });
+            
+    function toggleMenu() {
+    const navLinks = document.querySelector('.nav-links');
+    navLinks.classList.toggle('active'); 
+}
+
+
+    </script>
+</body>
+
+</html>
