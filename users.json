@@ -1,0 +1,91 @@
+[
+  {
+    "username": "ansh",
+    "password": "kaushal"
+  },
+  {
+    "username": "Kaemi",
+    "password": "$2b$10$JX6LP6M9aq2SS6Uz4BdwXOfUGOBiv6RIeMxbA44fTcxttH.r1Lv4u",
+    "playlist": [
+      {
+        "id": "3059676151",
+        "title": "Enemy with JID (Opening Title Version)",
+        "artist": "Imagine Dragons",
+        "preview": "https://cdnt-preview.dzcdn.net/api/1/1/9/c/4/0/9c4fab13e9f9c6b8cc91a79167f1d20c.mp3?hdnea=exp=1741069990~acl=/api/1/1/9/c/4/0/9c4fab13e9f9c6b8cc91a79167f1d20c.mp3*~data=user_id=0,application_id=42~hmac=3a9a62eaaedc39b2981e442dbe065b6d109f3d3847089c181cfcd1ec097b80c6",
+        "cover": "https://cdn-images.dzcdn.net/images/cover/ccfdd8af1c9a84298b14920f678b1a32/250x250-000000-80-0-0.jpg"
+      },
+      {
+        "id": "3185543151",
+        "title": "Tum Se Hi",
+        "artist": "Pritam",
+        "preview": "https://cdnt-preview.dzcdn.net/api/1/1/2/3/3/0/233afb0d161fba83fcc2033f31973b34.mp3?hdnea=exp=1741072134~acl=/api/1/1/2/3/3/0/233afb0d161fba83fcc2033f31973b34.mp3*~data=user_id=0,application_id=42~hmac=38e9bddcd30fe7ed507423d33c1060fe95b46eddf3cea6eba3faa5f2bc115b3d",
+        "cover": "https://cdn-images.dzcdn.net/images/cover/fd26f8db2e9ef163bce08199a871c8e4/250x250-000000-80-0-0.jpg"
+      },
+      {
+        "id": "2891387732",
+        "title": "Enemy (Arcane League of Legends) (Epic Version)",
+        "artist": "Krutikov Music",
+        "preview": "https://cdnt-preview.dzcdn.net/api/1/1/8/4/f/0/84f678928db7d6955dd8d54aad3bd6a7.mp3?hdnea=exp=1741072191~acl=/api/1/1/8/4/f/0/84f678928db7d6955dd8d54aad3bd6a7.mp3*~data=user_id=0,application_id=42~hmac=4d00562d217df21243b3cc23cafd942954593569fa7ee27569f0984fed2ea566",
+        "cover": "https://cdn-images.dzcdn.net/images/cover/5357d733e7db95244b5c9400c9ef13aa/250x250-000000-80-0-0.jpg"
+      }
+    ]
+  },
+  {
+    "username": "Saayra",
+    "password": "$2b$10$YT3OzM1DKJp59LB4BT07VOKxrfNbT51zWQOn2xuoqoiYCwFenOuRK"
+  },
+  {
+    "username": "test",
+    "password": "$2b$10$53PcYz61nmXPJnaa5nQOKegxlsQgJrUbmsHv4oG7S5quS3Hpz4aFi",
+    "playlist": [
+      {
+        "id": "3027413441",
+        "title": "ENEMY",
+        "artist": "The Blaze",
+        "preview": "https://cdnt-preview.dzcdn.net/api/1/1/e/3/e/0/e3e8cd89003922c5c067ab58ba563230.mp3?hdnea=exp=1741069360~acl=/api/1/1/e/3/e/0/e3e8cd89003922c5c067ab58ba563230.mp3*~data=user_id=0,application_id=42~hmac=fd46b23447c1db9c985c58689afc66a28952e2fbcffe41809fd811f6fd842992",
+        "cover": "https://cdn-images.dzcdn.net/images/cover/65a75d9b65f0da57cc49b32093f0f5b5/250x250-000000-80-0-0.jpg"
+      },
+      {
+        "id": "1535046792",
+        "title": "Enemy (from the series Arcane League of Legends)",
+        "artist": "Imagine Dragons",
+        "preview": "https://cdnt-preview.dzcdn.net/api/1/1/d/2/3/0/d237d9d4cc6a9eff9420f4c742110458.mp3?hdnea=exp=1741071026~acl=/api/1/1/d/2/3/0/d237d9d4cc6a9eff9420f4c742110458.mp3*~data=user_id=0,application_id=42~hmac=138a32a770fe64bc5f38e97a4f8714add1e5dcca2d52ed494792a7adcd044b8b",
+        "cover": "https://cdn-images.dzcdn.net/images/cover/59e97030824a55b87304485e549a2451/250x250-000000-80-0-0.jpg"
+      }
+    ]
+  },
+  {
+    "username": "gurneetkaur",
+    "password": "$2b$10$yiIsYA2.GyFdoXgaCBh56eAqNKP6ySiuG2iW35YueiYhIeTLB405K",
+    "playlist": [
+      {
+        "id": "2961969061",
+        "title": "Somewhere Only We Know",
+        "artist": "rhianne",
+        "preview": "https://cdnt-preview.dzcdn.net/api/1/1/7/d/c/0/7dcbb5bb25fba9df96e5f0eb502fd5fd.mp3?hdnea=exp=1741079529~acl=/api/1/1/7/d/c/0/7dcbb5bb25fba9df96e5f0eb502fd5fd.mp3*~data=user_id=0,application_id=42~hmac=412028cb2fed3ce2510469d18b0158179d3fb36ec7a90dd3020f8147910a3dc3",
+        "cover": "https://cdn-images.dzcdn.net/images/cover/7761bc3b62a91a336dff0f1619c43da4/250x250-000000-80-0-0.jpg"
+      },
+      {
+        "id": "89077521",
+        "title": "Blank Space",
+        "artist": "Taylor Swift",
+        "preview": "https://cdnt-preview.dzcdn.net/api/1/1/f/5/0/0/f50f1e3569acdf75d0b9d60f5b6c206f.mp3?hdnea=exp=1741100963~acl=/api/1/1/f/5/0/0/f50f1e3569acdf75d0b9d60f5b6c206f.mp3*~data=user_id=0,application_id=42~hmac=9e60ce479978aa099a69d1d80d91df53cda043774a30f6ee1f641722cec6e80a",
+        "cover": "https://cdn-images.dzcdn.net/images/cover/8c39b232a5edecdf5fffc14f551fa42b/250x250-000000-80-0-0.jpg"
+      },
+      {
+        "id": "597331022",
+        "title": "Lily",
+        "artist": "Alan Walker",
+        "preview": "https://cdnt-preview.dzcdn.net/api/1/1/2/5/6/0/256f0644b57ececcc34165b6a2081e45.mp3?hdnea=exp=1741101382~acl=/api/1/1/2/5/6/0/256f0644b57ececcc34165b6a2081e45.mp3*~data=user_id=0,application_id=42~hmac=0396031d69d48be64f84f6c290a3930c8d86cc1ad788716039d751ba4dafaae3",
+        "cover": "https://cdn-images.dzcdn.net/images/cover/e621ca96b823fcfa720888cd4deba640/250x250-000000-80-0-0.jpg"
+      },
+      {
+        "id": "89077533",
+        "title": "Bad Blood",
+        "artist": "Taylor Swift",
+        "preview": "https://cdnt-preview.dzcdn.net/api/1/1/a/c/7/0/ac727238d8084d84f46aa4135d87770d.mp3?hdnea=exp=1741103419~acl=/api/1/1/a/c/7/0/ac727238d8084d84f46aa4135d87770d.mp3*~data=user_id=0,application_id=42~hmac=02f321aa1726134bbebc0444047de35f60f387440da915e8d292777cd35f46ba",
+        "cover": "https://cdn-images.dzcdn.net/images/cover/8c39b232a5edecdf5fffc14f551fa42b/250x250-000000-80-0-0.jpg"
+      }
+    ]
+  }
+]
