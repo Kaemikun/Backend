@@ -11,11 +11,11 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Deezer API Configuration
+
 const API_KEY = "403332dfa7msh96da11df59bcc06p1cfa2djsn8f922da14d6f";
 const API_HOST = "deezerdevs-deezer.p.rapidapi.com";
 
-// Fetch songs from Deezer API
+
 async function searchSongs(query) {
     if (!query) return { error: "Missing search query" };
 
@@ -40,7 +40,7 @@ async function searchSongs(query) {
     }
 }
 
-// Search API Route
+
 app.get("/api/search", async (req, res) => {
     const query = req.query.q;
     if (!query) return res.status(400).json({ error: "Missing search query" });
@@ -49,12 +49,12 @@ app.get("/api/search", async (req, res) => {
     res.json(data);
 });
 
-// Initialize users.json if not exists
+
 if (!fs.existsSync(USERS_FILE)) {
     fs.writeFileSync(USERS_FILE, JSON.stringify([]));
 }
 
-// Read Users from users.json
+
 const readUsers = () => {
     try {
         return JSON.parse(fs.readFileSync(USERS_FILE, "utf8"));
@@ -64,7 +64,7 @@ const readUsers = () => {
     }
 };
 
-// Write Users to users.json
+
 const writeUsers = (users) => {
     try {
         fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
@@ -73,7 +73,7 @@ const writeUsers = (users) => {
     }
 };
 
-// Register Route
+
 app.post("/register", async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -83,12 +83,12 @@ app.post("/register", async (req, res) => {
 
         let users = readUsers();
 
-        // Check if user already exists
+        
         if (users.some(user => user.username === username)) {
             return res.status(400).json({ message: "User already exists" });
         }
 
-        // Hash password and save user
+        
         const hashedPassword = await bcrypt.hash(password, 10);
         users.push({ username, password: hashedPassword, playlist: [] });
 
@@ -100,7 +100,7 @@ app.post("/register", async (req, res) => {
     }
 });
 
-// Middleware to check user authentication
+
 const checkUserExists = (req, res, next) => {
     try {
         const { username, password } = req.body;
@@ -134,12 +134,12 @@ const checkUserExists = (req, res, next) => {
     }
 };
 
-// Login Route
+
 app.post("/login", checkUserExists, (req, res) => {
     res.json({ message: "Login successful", redirect: "/welcome", username: req.user.username });
 });
 
-// Fetch User's Playlist
+
 app.get("/api/get-playlist", (req, res) => {
     const username = req.query.username;
     if (!username) {
@@ -155,7 +155,7 @@ app.get("/api/get-playlist", (req, res) => {
     res.json({ playlist: user.playlist || [] });
 });
 
-// Save Playlist
+
 app.post("/api/save-playlist", (req, res) => {
     const { username, playlist } = req.body;
     if (!username || !playlist) {
@@ -174,7 +174,7 @@ app.post("/api/save-playlist", (req, res) => {
     res.json({ message: "Playlist saved successfully!" });
 });
 
-// Add Song to Playlist
+
 app.post("/api/add-song", (req, res) => {
     const { username, song } = req.body;
     if (!username || !song) {
@@ -196,12 +196,12 @@ app.post("/api/add-song", (req, res) => {
     res.json({ message: "Song added successfully!", playlist: user.playlist });
 });
 
-// Remove Song from Playlist
+
 app.post("/api/remove-song", async (req, res) => {
-    console.log("🔵 Remove song route hit!");
+    console.log("Remove song route hit!");
 
     const { username, id } = req.body;
-    console.log(`👤 Searching for user: ${username}`);
+    console.log(`Searching for user: ${username}`);
 
     if (!username || !id) {
         return res.status(400).json({ message: "Invalid request data" });
@@ -209,29 +209,29 @@ app.post("/api/remove-song", async (req, res) => {
 
     try {
         let users = JSON.parse(fs.readFileSync("users.json"));
-        console.log("🗂 Users file loaded");
+        console.log("Users file loaded");
 
-        // Find user in the array
+       
         let userIndex = users.findIndex(user => user.username === username);
 
         if (userIndex === -1) {
-            console.log("❌ User not found:", username);
+            console.log("User not found:", username);
             return res.status(404).json({ message: "User not found" });
         }
 
-        console.log("✅ Found user:", users[userIndex].username);
-        console.log("📜 Playlist before removal:", users[userIndex].playlist);
+        console.log("Found user:", users[userIndex].username);
+        console.log("Playlist before removal:", users[userIndex].playlist);
 
-        // Remove the song
+        
         users[userIndex].playlist = users[userIndex].playlist.filter(song => song.id !== id);
 
-        // Save updated file
+       
         fs.writeFileSync("users.json", JSON.stringify(users, null, 2));
 
-        console.log("✅ Song removed successfully!");
+        console.log("Song removed successfully!");
         res.json({ message: "Song removed successfully", playlist: users[userIndex].playlist });
     } catch (error) {
-        console.error("🚨 Error removing song:", error);
+        console.error("Error removing song:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
