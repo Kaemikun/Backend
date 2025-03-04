@@ -319,6 +319,8 @@ button.search-btn:hover {
         <div class="playlist">
             <h2>Your Playlist</h2>
             <div id="playlist-items">No songs added yet.</div>
+            <button id="save-playlist-btn" class="button">Save Playlist</button>
+
         </div>
     </div>
 
@@ -331,12 +333,18 @@ button.search-btn:hover {
         </div>
     </div>
     <script>
-      let currentAudio = new Audio();
+       let currentAudio = new Audio();
+let username = localStorage.getItem("username");
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("search").addEventListener("input", debounce(searchSongs, 500));
-    document.getElementById("play-btn").addEventListener("click", playAudio);
-    document.getElementById("pause-btn").addEventListener("click", pauseAudio);
+
+    document.getElementById("play-btn").addEventListener("click", () => currentAudio.play());
+    document.getElementById("pause-btn").addEventListener("click", () => currentAudio.pause());
+
+    if (username) {
+        await loadPlaylist(); // ✅ Load playlist correctly when user is logged in
+    }
 });
 
 function debounce(func, delay) {
@@ -356,18 +364,10 @@ async function searchSongs() {
         return;
     }
 
-    const url = `https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(searchInput)}`;
-    const options = {
-        method: "GET",
-        headers: {
-            "x-rapidapi-key": "403332dfa7msh96da11df59bcc06p1cfa2djsn8f922da14d6f",
-            "x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
-        }
-    };
-
     try {
-        const response = await fetch(url, options);
+        const response = await fetch(`/api/search?q=${encodeURIComponent(searchInput)}`);
         if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+        localStorage.setItem("username", username);
 
         const data = await response.json();
         if (!data.data.length) {
@@ -381,29 +381,96 @@ async function searchSongs() {
                 <div class="song-details">
                     <span>${track.title} - ${track.artist.name}</span>
                 </div>
-                <button class="button add-btn" data-id="${track.id}" data-preview="${track.preview}" data-cover="${track.album.cover_medium}">Add</button>
+                <button class="button save-btn" data-id="${track.id}" data-title="${track.title}" 
+                    data-artist="${track.artist.name}" data-preview="${track.preview}" 
+                    data-cover="${track.album.cover_medium}">Save to Playlist</button>
             </div>
         `).join("");
 
-        setupAddButtons();
+        setupSaveButtons();
     } catch (error) {
         console.error("Error fetching songs:", error);
         songResults.innerHTML = "<p>Failed to load songs. Please try again later.</p>";
     }
 }
 
-function setupAddButtons() {
-    document.querySelectorAll(".add-btn").forEach(button => {
-        button.addEventListener("click", function () {
-            const songItem = this.parentElement;
-            const songText = songItem.querySelector(".song-details span").textContent;
-            const songId = this.getAttribute("data-id");
-            const previewUrl = this.getAttribute("data-preview");
-            const coverUrl = this.getAttribute("data-cover");
+async function loadPlaylist() {
+    if (!username) {
+        alert("You must be logged in to view your playlist!");
+        return;
+    }
 
-            addSongToPlaylist(songText, songId, previewUrl, coverUrl);
+    try {
+        const response = await fetch(`/api/get-playlist?username=${username}`);
+        const data = await response.json();
+
+        if (response.ok) {
+            displayPlaylist(data.playlist);
+        } else {
+            console.error("Error fetching playlist:", data.message);
+        }
+    } catch (error) {
+        console.error("Failed to load playlist:", error);
+    }
+}
+
+function displayPlaylist(songs) {
+    const playlistContainer = document.getElementById("playlist-items"); // ✅ Correct ID
+    playlistContainer.innerHTML = ""; // Clear previous items
+
+    if (songs.length === 0) {
+        playlistContainer.innerHTML = "<p>No songs added yet.</p>";
+        return;
+    }
+
+    songs.forEach(song => {
+        addSongToPlaylist(song.title, song.id, song.preview, song.cover);
+    });
+}
+
+function setupSaveButtons() {
+    document.querySelectorAll(".save-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const song = {
+                id: this.getAttribute("data-id"),
+                title: this.getAttribute("data-title"),
+                artist: this.getAttribute("data-artist"),
+                preview: this.getAttribute("data-preview"),
+                cover: this.getAttribute("data-cover")
+            };
+            saveToPlaylist(song);
         });
     });
+}
+
+async function saveToPlaylist(song) {
+    if (!username) {
+        alert("You must be logged in to save songs.");
+        return;
+    }
+
+    console.log("Sending data to API:", { username, song });
+
+    try {
+        const response = await fetch("/api/add-song", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, song })
+        });
+
+        const data = await response.json();
+        console.log("Server Response:", data);
+
+        if (!response.ok) {
+            throw new Error(data.message || "Failed to save song");
+        }
+
+        alert("Song saved successfully!");
+        addSongToPlaylist(song.title, song.id, song.preview, song.cover); // ✅ Add to UI instantly
+    } catch (error) {
+        console.error("Error saving song:", error);
+        alert("Error saving song. Please try again.");
+    }
 }
 
 function addSongToPlaylist(songText, songId, previewUrl, coverUrl) {
@@ -441,12 +508,48 @@ function setupPlaylistButtons() {
     });
 
     document.querySelectorAll(".remove-btn").forEach(button => {
-        button.onclick = function () {
-            this.parentElement.remove();
+        button.onclick = async function () {
+            const songElement = this.parentElement;
+            const songId = songElement.getAttribute("data-id");
+
+            await removeSongFromPlaylist(songId);
+            songElement.remove();
             checkEmptyPlaylist();
         };
     });
 }
+
+async function removeSongFromPlaylist(songId) {
+    const username = localStorage.getItem("username");
+    if (!username) {
+        alert("Please log in to modify your playlist.");
+        return;
+    }
+
+    console.log("Removing song for user:", username); // Debugging step
+    console.log("Removing song with ID:", songId);
+
+    try {
+        const response = await fetch("/api/remove-song", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, id: songId })
+        });
+
+        const data = await response.json();
+        console.log("Server Response:", data);
+
+        if (response.ok) {
+            console.log("Song removed from playlist:", data);
+        } else {
+            alert(data.message || "Failed to remove song.");
+        }
+    } catch (error) {
+        console.error("Error removing song:", error);
+    }
+}
+
+
 
 function checkEmptyPlaylist() {
     const playlistContainer = document.getElementById("playlist-items");
@@ -461,21 +564,21 @@ function playSong(url, songName, coverUrl) {
         return;
     }
 
+    // Stop any currently playing audio
+    currentAudio.pause();
+    currentAudio.currentTime = 0; // Reset playback position
+
+    // Change the source and play the new song
     currentAudio.src = url;
+    currentAudio.load(); // Ensure the browser loads the new song
     currentAudio.play();
 
+    // Update UI
     document.getElementById("playing-cover").src = coverUrl;
     document.getElementById("now-playing").style.display = "block";
     document.getElementById("playing-info").innerHTML = `<strong>${songName}</strong>`;
 }
 
-function playAudio() {
-    currentAudio.play();
-}
-
-function pauseAudio() {
-    currentAudio.pause();
-}
 
     </script>
     

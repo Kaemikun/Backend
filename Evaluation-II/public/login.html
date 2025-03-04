@@ -37,12 +37,14 @@
         
             const data = await response.json();
             if (response.ok) {
+                localStorage.setItem("username", username); // ✅ Store username
                 window.location.href = data.redirect; // Redirect to welcome page
             } else {
                 alert(data.message);
             }
         });
-        </script>
+    </script>
+    
         
 </body>
 </html>
