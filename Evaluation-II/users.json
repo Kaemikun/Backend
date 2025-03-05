@@ -53,5 +53,46 @@
         "cover": "https://cdn-images.dzcdn.net/images/cover/59e97030824a55b87304485e549a2451/250x250-000000-80-0-0.jpg"
       }
     ]
+  },
+  {
+    "username": "gurneetkaur",
+    "password": "$2b$10$yiIsYA2.GyFdoXgaCBh56eAqNKP6ySiuG2iW35YueiYhIeTLB405K",
+    "playlist": [
+      {
+        "id": "2961969061",
+        "title": "Somewhere Only We Know",
+        "artist": "rhianne",
+        "preview": "https://cdnt-preview.dzcdn.net/api/1/1/7/d/c/0/7dcbb5bb25fba9df96e5f0eb502fd5fd.mp3?hdnea=exp=1741079529~acl=/api/1/1/7/d/c/0/7dcbb5bb25fba9df96e5f0eb502fd5fd.mp3*~data=user_id=0,application_id=42~hmac=412028cb2fed3ce2510469d18b0158179d3fb36ec7a90dd3020f8147910a3dc3",
+        "cover": "https://cdn-images.dzcdn.net/images/cover/7761bc3b62a91a336dff0f1619c43da4/250x250-000000-80-0-0.jpg"
+      },
+      {
+        "id": "89077521",
+        "title": "Blank Space",
+        "artist": "Taylor Swift",
+        "preview": "https://cdnt-preview.dzcdn.net/api/1/1/f/5/0/0/f50f1e3569acdf75d0b9d60f5b6c206f.mp3?hdnea=exp=1741100963~acl=/api/1/1/f/5/0/0/f50f1e3569acdf75d0b9d60f5b6c206f.mp3*~data=user_id=0,application_id=42~hmac=9e60ce479978aa099a69d1d80d91df53cda043774a30f6ee1f641722cec6e80a",
+        "cover": "https://cdn-images.dzcdn.net/images/cover/8c39b232a5edecdf5fffc14f551fa42b/250x250-000000-80-0-0.jpg"
+      },
+      {
+        "id": "597331022",
+        "title": "Lily",
+        "artist": "Alan Walker",
+        "preview": "https://cdnt-preview.dzcdn.net/api/1/1/2/5/6/0/256f0644b57ececcc34165b6a2081e45.mp3?hdnea=exp=1741101382~acl=/api/1/1/2/5/6/0/256f0644b57ececcc34165b6a2081e45.mp3*~data=user_id=0,application_id=42~hmac=0396031d69d48be64f84f6c290a3930c8d86cc1ad788716039d751ba4dafaae3",
+        "cover": "https://cdn-images.dzcdn.net/images/cover/e621ca96b823fcfa720888cd4deba640/250x250-000000-80-0-0.jpg"
+      },
+      {
+        "id": "89077533",
+        "title": "Bad Blood",
+        "artist": "Taylor Swift",
+        "preview": "https://cdnt-preview.dzcdn.net/api/1/1/a/c/7/0/ac727238d8084d84f46aa4135d87770d.mp3?hdnea=exp=1741103419~acl=/api/1/1/a/c/7/0/ac727238d8084d84f46aa4135d87770d.mp3*~data=user_id=0,application_id=42~hmac=02f321aa1726134bbebc0444047de35f60f387440da915e8d292777cd35f46ba",
+        "cover": "https://cdn-images.dzcdn.net/images/cover/8c39b232a5edecdf5fffc14f551fa42b/250x250-000000-80-0-0.jpg"
+      },
+      {
+        "id": "3050380851",
+        "title": "APT.",
+        "artist": "ROSÉ",
+        "preview": "https://cdnt-preview.dzcdn.net/api/1/1/b/5/f/0/b5f4d43a587c9c2bf2095881ef5c60d7.mp3?hdnea=exp=1741106304~acl=/api/1/1/b/5/f/0/b5f4d43a587c9c2bf2095881ef5c60d7.mp3*~data=user_id=0,application_id=42~hmac=3ed9ced06753a0632044b6122da6e3517d72fc52ab82a4f58cbb112750078f0a",
+        "cover": "https://cdn-images.dzcdn.net/images/cover/258e6042338ce64bb4157c0c94b232ac/250x250-000000-80-0-0.jpg"
+      }
+    ]
   }
 ]

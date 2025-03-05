@@ -229,6 +229,34 @@ button.search-btn:hover {
     color: white;
 }
 
+#next-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+#next-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+#prev-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+#prev-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
 .remove-btn {
     border: 2px solid #ff4d4d;
     color: #ff4d4d;
@@ -328,19 +356,26 @@ button.search-btn:hover {
         <img id="playing-cover" src="" alt="Album Cover">
         <div id="playing-info"><strong>Now Playing</strong></div>
         <div class="player-controls">
+            <button id="prev-btn">⏮</button>
             <button id="play-btn">▶</button>
             <button id="pause-btn">❚❚</button>
+            <button id="next-btn">⏭</button>
         </div>
     </div>
     <script>
-       let currentAudio = new Audio();
+        
+        let currentAudio = new Audio();
 let username = localStorage.getItem("username");
+let playlistSongs = [];
+let songIndex = 0;
 
 document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("search").addEventListener("input", debounce(searchSongs, 500));
-
     document.getElementById("play-btn").addEventListener("click", () => currentAudio.play());
     document.getElementById("pause-btn").addEventListener("click", () => currentAudio.pause());
+
+    document.getElementById("prev-btn").addEventListener("click", playPrevSong);
+    document.getElementById("next-btn").addEventListener("click", playNextSong);
 
     if (username) {
         await loadPlaylist(); // ✅ Load playlist correctly when user is logged in
@@ -423,6 +458,8 @@ function displayPlaylist(songs) {
         return;
     }
 
+    playlistSongs = songs; // Populate playlistSongs with the fetched songs
+
     songs.forEach(song => {
         addSongToPlaylist(song.title, song.id, song.preview, song.cover);
     });
@@ -466,6 +503,7 @@ async function saveToPlaylist(song) {
         }
 
         alert("Song saved successfully!");
+        playlistSongs.push(song); // Add song to playlistSongs
         addSongToPlaylist(song.title, song.id, song.preview, song.cover); // ✅ Add to UI instantly
     } catch (error) {
         console.error("Error saving song:", error);
@@ -503,6 +541,7 @@ function setupPlaylistButtons() {
             const songName = this.parentElement.querySelector("span").textContent;
             const coverUrl = this.getAttribute("data-cover");
 
+            songIndex = playlistSongs.findIndex(song => song.preview === previewUrl); // Set songIndex
             playSong(previewUrl, songName, coverUrl);
         };
     });
@@ -541,6 +580,7 @@ async function removeSongFromPlaylist(songId) {
 
         if (response.ok) {
             console.log("Song removed from playlist:", data);
+            playlistSongs = playlistSongs.filter(song => song.id !== songId); // Remove from playlistSongs
         } else {
             alert(data.message || "Failed to remove song.");
         }
@@ -549,12 +589,26 @@ async function removeSongFromPlaylist(songId) {
     }
 }
 
-
-
 function checkEmptyPlaylist() {
     const playlistContainer = document.getElementById("playlist-items");
     if (playlistContainer.children.length === 0) {
         playlistContainer.innerHTML = "<p>No songs added yet.</p>";
+    }
+}
+
+function playPrevSong() {
+    if (playlistSongs.length > 0 && songIndex > 0) {
+        songIndex--;
+        let prevSong = playlistSongs[songIndex];
+        playSong(prevSong.preview, prevSong.title, prevSong.cover);
+    }
+}
+
+function playNextSong() {
+    if (playlistSongs.length > 0 && songIndex < playlistSongs.length - 1) {
+        songIndex++;
+        let nextSong = playlistSongs[songIndex];
+        playSong(nextSong.preview, nextSong.title, nextSong.cover);
     }
 }
 
@@ -576,7 +630,7 @@ function playSong(url, songName, coverUrl) {
     // Update UI
     document.getElementById("playing-cover").src = coverUrl;
     document.getElementById("now-playing").style.display = "block";
-    document.getElementById("playing-info").innerHTML = `<strong>${songName}</strong>`;
+    document.getElementById("playing-info").innerHTML = `<strong>Now Playing:</strong> ${songName}`;
 }
 
 
