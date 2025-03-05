@@ -9,13 +9,11 @@ Welcome to the **Music Streaming App**, an immersive music experience featuring 
 - **Advanced Search** – Search for songs, artists, and albums using the **Deezer API**.
 - **High-Quality Streaming** – Play songs directly from Deezer with real-time updates.
 - **Personalized Playlists** – Users can create and manage custom playlists.
-- **Dark & Light Mode** – Toggle between themes for a personalized experience.
 - **Responsive Layout** – Fully optimized for mobile and desktop devices.
 
 ### 🔧 Backend Features
 - **User Authentication** – Secure sign-up, login, and session management.
-- **OAuth Integration** – Social media login options for easy access.
-- **Favorites & History** – Track recently played songs and favorite tracks.
+- **Favorites & History** – Track user's songs.
 - **Custom API Endpoints** – Backend endpoints for managing playlists and user data.
 - **Secure Database** – Store user profiles, preferences, and playlists securely.
 
