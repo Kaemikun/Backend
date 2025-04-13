@@ -7,10 +7,19 @@ const cors = require("cors");
 const app = express();
 const PORT = 3000;
 const USERS_FILE = "users.json";
+const rateLimit = require('express-rate-limit');
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
+const limiter = rateLimit({
+  windowMs: 1 * 10 * 1000, 
+  max: 10,
+  handler: (req, res) => {
+    res.status(429).sendFile(path.join(__dirname, 'public', 'page.html'));
+  },
+});
+app.use('/login', limiter);
 
 const API_KEY = "403332dfa7msh96da11df59bcc06p1cfa2djsn8f922da14d6f";
 const API_HOST = "deezerdevs-deezer.p.rapidapi.com";
