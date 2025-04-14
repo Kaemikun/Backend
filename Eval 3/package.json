@@ -1,0 +1,24 @@
+{
+  "name": "evaluation-ii",
+  "version": "1.0.0",
+  "description": "Welcome to the **Music Streaming App**, an immersive music experience featuring a premium GUI with seamless integration of the **Deezer API** for song search and playback. This app offers a modern and responsive interface, user authentication, and personalized music discovery.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "uuid": "^11.1.0"
+  }
+}

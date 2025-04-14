@@ -1,0 +1,484 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Spotify-Like Playlist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+       * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #121212;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+#now-playing {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 340px;
+    background: linear-gradient(135deg, #222, #444);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    transition: all 0.3s ease-in-out;
+}
+
+#now-playing img {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+#playing-info {
+    font-size: 14px;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.player-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.player-controls button {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+.player-controls button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.song-item {
+    display: flex;
+    align-items: center;
+    background: #333;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    color: white;
+}
+
+.song-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.playlist-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #444;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+}
+
+.playlist-cover {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+/* Search Bar */
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+input {
+    width: 300px;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    background: #333;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+}
+
+button.search-btn {
+    background: #1DB954;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    transition: 0.3s;
+}
+
+button.search-btn:hover {
+    background: #17a74b;
+}
+
+/* Layout */
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.song-list, .playlist {
+    width: 45%;
+    background: #181818;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    min-height: 300px;
+}
+
+.song-item, .playlist-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #333;
+}
+
+.song-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    margin-right: 10px;
+}
+
+.song-details {
+    flex-grow: 1;
+    text-align: left;
+}
+.button-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Buttons */
+.button {
+    width: 120px;
+    height: 40px;
+    font-size: 16px;
+    border-radius: 20px;
+    border: 2px solid #1DB954;
+    background: transparent;
+    color: #1DB954;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.button:hover {
+    background: #1DB954;
+    color: white;
+}
+
+.add-btn, .play-btn, .remove-btn {
+    width: 120px;
+    height: 40px;
+    font-size: 16px;
+    border-radius: 20px;
+    border: 2px solid #1DB954;
+    background: transparent;
+    color: #1DB954;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.add-btn:hover, .play-btn:hover {
+    background: #1DB954;
+    color: white;
+}
+
+.remove-btn {
+    border: 2px solid #ff4d4d;
+    color: #ff4d4d;
+}
+
+.remove-btn:hover {
+    background: #ff4d4d;
+    color: white;
+}
+.playlist-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #333;
+    position: relative;
+}
+
+.playlist-item .button-container {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    left: 10px; /* Align to the left */
+}
+
+.playlist-item span {
+    flex-grow: 1;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .song-list, .playlist {
+        width: 90%;
+    }
+}
+
+/* Now Playing Bar */
+/* #now-playing {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #1DB954, #121212);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 3px solid #1DB954;
+    z-index: 1000;
+    box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.5);
+}
+
+#playing-info {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+}
+
+#audio-player {
+    flex-grow: 0;
+    margin-left: 10px;
+} */
+
+    </style>
+</head>
+<body>
+
+    <h1>My Playlist#1</h1>
+
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search for a song...">
+        <button class="search-btn" onclick="searchSongs()">Search</button>
+    </div>
+
+    <div class="container">
+        <div class="song-list">
+            <h2>Search Results</h2>
+            <div id="song-results">No songs found.</div>
+        </div>
+
+        <div class="playlist">
+            <h2>Your Playlist</h2>
+            <div id="playlist-items">No songs added yet.</div>
+        </div>
+    </div>
+
+    <div id="now-playing">
+        <img id="playing-cover" src="" alt="Album Cover">
+        <div id="playing-info"><strong>Now Playing</strong></div>
+        <div class="player-controls">
+            <button id="play-btn">▶</button>
+            <button id="pause-btn">❚❚</button>
+        </div>
+    </div>
+    <script>
+      let currentAudio = new Audio();
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("search").addEventListener("input", debounce(searchSongs, 500));
+    document.getElementById("play-btn").addEventListener("click", playAudio);
+    document.getElementById("pause-btn").addEventListener("click", pauseAudio);
+});
+
+function debounce(func, delay) {
+    let timer;
+    return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+
+async function searchSongs() {
+    const searchInput = document.getElementById("search").value.trim();
+    const songResults = document.getElementById("song-results");
+
+    if (!searchInput) {
+        songResults.innerHTML = "<p>Please enter a search term.</p>";
+        return;
+    }
+
+    const url = `https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(searchInput)}`;
+    const options = {
+        method: "GET",
+        headers: {
+            "x-rapidapi-key": "403332dfa7msh96da11df59bcc06p1cfa2djsn8f922da14d6f",
+            "x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
+        }
+    };
+
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+
+        const data = await response.json();
+        if (!data.data.length) {
+            songResults.innerHTML = "<p>No songs available.</p>";
+            return;
+        }
+
+        songResults.innerHTML = data.data.map(track => `
+            <div class="song-item">
+                <img src="${track.album.cover_small}" alt="cover">
+                <div class="song-details">
+                    <span>${track.title} - ${track.artist.name}</span>
+                </div>
+                <button class="button add-btn" data-id="${track.id}" data-preview="${track.preview}" data-cover="${track.album.cover_medium}">Add</button>
+            </div>
+        `).join("");
+
+        setupAddButtons();
+    } catch (error) {
+        console.error("Error fetching songs:", error);
+        songResults.innerHTML = "<p>Failed to load songs. Please try again later.</p>";
+    }
+}
+
+function setupAddButtons() {
+    document.querySelectorAll(".add-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            const songItem = this.parentElement;
+            const songText = songItem.querySelector(".song-details span").textContent;
+            const songId = this.getAttribute("data-id");
+            const previewUrl = this.getAttribute("data-preview");
+            const coverUrl = this.getAttribute("data-cover");
+
+            addSongToPlaylist(songText, songId, previewUrl, coverUrl);
+        });
+    });
+}
+
+function addSongToPlaylist(songText, songId, previewUrl, coverUrl) {
+    const playlistContainer = document.getElementById("playlist-items");
+
+    if (document.querySelector(`.playlist-item[data-id="${songId}"]`)) return;
+
+    const newItem = document.createElement("div");
+    newItem.classList.add("playlist-item");
+    newItem.setAttribute("data-id", songId);
+    newItem.innerHTML = `
+        <img src="${coverUrl}" class="playlist-cover" alt="cover">
+        <span>${songText}</span>
+        <button class="button play-song" data-preview="${previewUrl}" data-cover="${coverUrl}">▶</button>
+        <button class="button remove-btn">Remove</button>
+    `;
+
+    if (playlistContainer.innerHTML.includes("No songs added yet.")) {
+        playlistContainer.innerHTML = "";
+    }
+
+    playlistContainer.appendChild(newItem);
+    setupPlaylistButtons();
+}
+
+function setupPlaylistButtons() {
+    document.querySelectorAll(".play-song").forEach(button => {
+        button.onclick = function () {
+            const previewUrl = this.getAttribute("data-preview");
+            const songName = this.parentElement.querySelector("span").textContent;
+            const coverUrl = this.getAttribute("data-cover");
+
+            playSong(previewUrl, songName, coverUrl);
+        };
+    });
+
+    document.querySelectorAll(".remove-btn").forEach(button => {
+        button.onclick = function () {
+            this.parentElement.remove();
+            checkEmptyPlaylist();
+        };
+    });
+}
+
+function checkEmptyPlaylist() {
+    const playlistContainer = document.getElementById("playlist-items");
+    if (playlistContainer.children.length === 0) {
+        playlistContainer.innerHTML = "<p>No songs added yet.</p>";
+    }
+}
+
+function playSong(url, songName, coverUrl) {
+    if (!url) {
+        alert("This song does not have a preview.");
+        return;
+    }
+
+    currentAudio.src = url;
+    currentAudio.play();
+
+    document.getElementById("playing-cover").src = coverUrl;
+    document.getElementById("now-playing").style.display = "block";
+    document.getElementById("playing-info").innerHTML = `<strong>${songName}</strong>`;
+}
+
+function playAudio() {
+    currentAudio.play();
+}
+
+function pauseAudio() {
+    currentAudio.pause();
+}
+
+    </script>
+    
+</body>
+</html>
