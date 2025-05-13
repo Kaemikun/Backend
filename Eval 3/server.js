@@ -7,7 +7,7 @@ const { MongoClient } = require("mongodb");
 
 const app = express();
 const PORT = 3000;
-const MONGO_URI = "mongodb+srv://ansh:kaushal@cluster0.zyhjldv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"; 
+const MONGO_URI = "mongodb+srv://ansh:<password>@cluster0.zyhjldv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"; 
 const DB_NAME = "musicApp";
 const USERS_COLLECTION = "users";
 
