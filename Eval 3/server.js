@@ -1,291 +1,203 @@
 const express = require("express");
-const fs = require("fs");
 const path = require("path");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
-const cors = require("cors");
+const rateLimit = require('express-rate-limit');
+const { MongoClient } = require("mongodb");
+
 const app = express();
 const PORT = 3000;
-const USERS_FILE = "users.json";
-const rateLimit = require('express-rate-limit');
-app.use(cors());
+const MONGO_URI = "mongodb+srv://ansh:kaushal@cluster0.zyhjldv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"; 
+const DB_NAME = "musicApp";
+const USERS_COLLECTION = "users";
+
+let db, usersCollection;
+
+MongoClient.connect(MONGO_URI, { useUnifiedTopology: true })
+  .then(client => {
+    db = client.db(DB_NAME);
+    usersCollection = db.collection(USERS_COLLECTION);
+    app.listen(PORT, () => {
+      console.log(`Server running at http://localhost:${PORT}`);
+    });
+  })
+  .catch(error => {
+    console.error("MongoDB connection error:", error);
+    process.exit(1);
+  });
+
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-
 const limiter = rateLimit({
-  windowMs: 1 * 10 * 1000, 
-  max: 10,
+  windowMs: 1 * 5 * 1000,
+  max: 5,
   handler: (req, res) => {
-    res.status(429).render(path.join(__dirname, 'views', 'page.ejs'));
+    res.status(429).render("page.ejs");
   },
 });
 
+app.use('/login', limiter);
 
-
-// Serve Static Pages
+app.get("/", (req, res) => res.render("welcome.ejs"));
 app.get("/register", (req, res) => res.render("register.ejs"));
 app.get("/login", (req, res) => res.render("login.ejs"));
-app.get("/", (req, res) => {
-    res.render("welcome.ejs");
-});
-
-
-app.use('/login', limiter);
 
 const API_KEY = "403332dfa7msh96da11df59bcc06p1cfa2djsn8f922da14d6f";
 const API_HOST = "deezerdevs-deezer.p.rapidapi.com";
 
-
 async function searchSongs(query) {
-    if (!query) return { error: "Missing search query" };
+  if (!query) return { error: "Missing search query" };
 
-    const url = `https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(query)}`;
-    const options = {
-        method: "GET",
-        headers: {
-            "x-rapidapi-key": API_KEY,
-            "x-rapidapi-host": API_HOST
-        }
-    };
-
-    try {
-        const response = await fetch(url, options);
-        if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
-
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error("Error fetching songs:", error);
-        return { error: "Failed to fetch songs" };
+  const url = `https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(query)}`;
+  const options = {
+    method: "GET",
+    headers: {
+      "x-rapidapi-key": API_KEY,
+      "x-rapidapi-host": API_HOST
     }
-}
+  };
 
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching songs:", error);
+    return { error: "Failed to fetch songs" };
+  }
+}
 
 app.get("/api/search", async (req, res) => {
-    const query = req.query.q;
-    if (!query) return res.status(400).json({ error: "Missing search query" });
+  const query = req.query.q;
+  if (!query) return res.status(400).json({ error: "Missing search query" });
 
-    const data = await searchSongs(query);
-    res.json(data);
+  const data = await searchSongs(query);
+  res.json(data);
 });
-
-
-if (!fs.existsSync(USERS_FILE)) {
-    fs.writeFileSync(USERS_FILE, JSON.stringify([]));
-}
-
-
-const readUsers = () => {
-    try {
-        return JSON.parse(fs.readFileSync(USERS_FILE, "utf8"));
-    } catch (error) {
-        console.error("Error reading users file:", error.message);
-        return [];
-    }
-};
-
-
-const writeUsers = (users) => {
-    try {
-        fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-    } catch (error) {
-        console.error("Error writing to users file:", error.message);
-    }
-};
-
 
 app.post("/register", async (req, res) => {
-    try {
-        const { username, password } = req.body;
-        if (!username || !password) {
-            return res.status(400).json({ message: "Username and password are required" });
-        }
+  const { username, password } = req.body;
+  if (!username || !password) return res.status(400).json({ message: "Username and password are required" });
 
-        let users = readUsers();
+  try {
+    const existingUser = await usersCollection.findOne({ username });
+    if (existingUser) return res.status(400).json({ message: "User already exists" });
 
-        
-        if (users.some(user => user.username === username)) {
-            return res.status(400).json({ message: "User already exists" });
-        }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await usersCollection.insertOne({ username, password: hashedPassword, playlist: [] });
 
-        
-        const hashedPassword = await bcrypt.hash(password, 10);
-        users.push({ username, password: hashedPassword, playlist: [] });
-
-        writeUsers(users);
-        res.status(201).json({ message: "Registration successful" });
-    } catch (error) {
-        console.error("Error registering user:", error.message);
-        res.status(500).json({ message: "Server error" });
-    }
+    res.status(201).json({ message: "Registration successful" });
+  } catch (error) {
+    console.error("Error registering user:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
+const checkUserExists = async (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) return res.status(400).json({ message: "Missing username or password" });
 
-const checkUserExists = (req, res, next) => {
-    try {
-        const { username, password } = req.body;
-        if (!username || !password) {
-            return res.status(400).json({ message: "Missing username or password" });
-        }
-
-        const users = readUsers();
-        const user = users.find(u => u.username === username);
-
-        if (!user) {
-            return res.status(401).json({ message: "Invalid username or password" });
-        }
-
-        bcrypt.compare(password, user.password, (err, match) => {
-            if (err) {
-                console.error("Error comparing passwords:", err.message);
-                return res.status(500).json({ message: "Server error" });
-            }
-
-            if (!match) {
-                return res.status(401).json({ message: "Invalid username or password" });
-            }
-
-            req.user = user;
-            next();
-        });
-    } catch (error) {
-        console.error("Error in authentication middleware:", error.message);
-        res.status(500).json({ message: "Server error" });
+  try {
+    const user = await usersCollection.findOne({ username });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ message: "Invalid username or password" });
     }
+    req.user = user;
+    next();
+  } catch (error) {
+    console.error("Authentication error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
-
 app.post("/login", checkUserExists, (req, res) => {
-    res.json({ message: "Login successful", redirect: "/" });
+  res.json({ message: "Login successful", redirect: "/" });
 });
 
+app.get("/api/get-playlist", async (req, res) => {
+  const username = req.query.username;
+  if (!username) return res.status(400).json({ message: "Username is required" });
 
-app.get("/api/get-playlist", (req, res) => {
-    const username = req.query.username;
-    if (!username) {
-        return res.status(400).json({ message: "Username is required" });
-    }
-
-    const users = readUsers();
-    const user = users.find(u => u.username === username);
-    if (!user) {
-        return res.status(404).json({ message: "User not found" });
-    }
-
-    
+  try {
+    const user = await usersCollection.findOne({ username });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json({ playlist: user.playlist || [] });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
+app.post("/api/save-playlist", async (req, res) => {
+  const { username, playlist } = req.body;
+  if (!username || !playlist) return res.status(400).json({ message: "Invalid data" });
 
-app.post("/api/save-playlist", (req, res) => {
-    const { username, playlist } = req.body;
-    if (!username || !playlist) {
-        return res.status(400).json({ message: "Invalid data" });
-    }
-
-    let users = readUsers();
-    let user = users.find(u => u.username === username);
-    if (!user) {
-        return res.status(404).json({ message: "User not found" });
-    }
-
-    user.playlist = playlist;
-    writeUsers(users);
+  try {
+    const result = await usersCollection.updateOne(
+      { username },
+      { $set: { playlist } }
+    );
+    if (result.matchedCount === 0) return res.status(404).json({ message: "User not found" });
 
     res.json({ message: "Playlist saved successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
+app.post("/api/add-song", async (req, res) => {
+  const { username, song } = req.body;
+  if (!username || !song) return res.status(400).json({ message: "Invalid data" });
 
-app.post("/api/add-song", (req, res) => {
-    const { username, song } = req.body;
-    if (!username || !song) {
-        return res.status(400).json({ message: "Invalid data" });
+  try {
+    const user = await usersCollection.findOne({ username });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const exists = user.playlist.some(s => s.id === song.id);
+    if (!exists) {
+      await usersCollection.updateOne(
+        { username },
+        { $push: { playlist: song } }
+      );
     }
 
-    let users = readUsers();
-    let user = users.find(u => u.username === username);
-    if (!user) {
-        return res.status(404).json({ message: "User not found" });
-    }
-
-    user.playlist = user.playlist || [];
-    if (!user.playlist.some(s => s.id === song.id)) {
-        user.playlist.push(song);
-    }
-    writeUsers(users);
-
-    res.json({ message: "Song added successfully!", playlist: user.playlist });
+    const updatedUser = await usersCollection.findOne({ username });
+    res.json({ message: "Song added successfully!", playlist: updatedUser.playlist });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 });
-
 
 app.post("/api/remove-song", async (req, res) => {
-    console.log("Remove song route hit!");
+  const { username, id } = req.body;
+  if (!username || !id) return res.status(400).json({ message: "Invalid request data" });
 
-    const { username, id } = req.body;
-    console.log(`Searching for user: ${username}`);
+  try {
+    const result = await usersCollection.updateOne(
+      { username },
+      { $pull: { playlist: { id: id } } }
+    );
 
-    if (!username || !id) {
-        return res.status(400).json({ message: "Invalid request data" });
-    }
+    if (result.matchedCount === 0) return res.status(404).json({ message: "User not found" });
 
-    try {
-        let users = JSON.parse(fs.readFileSync("users.json"));
-        console.log("Users file loaded");
-
-       
-        let userIndex = users.findIndex(user => user.username === username);
-
-        if (userIndex === -1) {
-            console.log("User not found:", username);
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        console.log("Found user:", users[userIndex].username);
-        console.log("Playlist before removal:", users[userIndex].playlist);
-
-        
-        users[userIndex].playlist = users[userIndex].playlist.filter(song => song.id !== id);
-
-       
-        fs.writeFileSync("users.json", JSON.stringify(users, null, 2));
-
-        console.log("Song removed successfully!");
-        res.json({ message: "Song removed successfully", playlist: users[userIndex].playlist });
-    } catch (error) {
-        console.error("Error removing song:", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
+    const updatedUser = await usersCollection.findOne({ username });
+    res.json({ message: "Song removed successfully", playlist: updatedUser.playlist });
+  } catch (error) {
+    console.error("Error removing song:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
-
-
-
-
-
-
-
-// app.use((req, res, next) => {
-//     res.status(404).sendFile(path.join(__dirname, './public/404.html'));
-// });
-app.get("*", (req, res,next) => {
-    const err = new Error("Page not found");
-    err.status = 404;
-    next(err);
+app.get("*", (req, res, next) => {
+  const err = new Error("Page not found");
+  err.status = 404;
+  next(err);
 });
 
-// Global Error Handler
 app.use((err, req, res, next) => {
-    res.render(path.join(__dirname, './views/404.ejs'));
-    // console.error("Unhandled error:", err.message);
-    // res.status(500).json({ message: "Internal Server Error" });
-});
-
-// Start Server
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+  res.status(err.status || 500).render("404.ejs");
 });
